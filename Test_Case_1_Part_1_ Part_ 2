@@ -1,5 +1,4 @@
-
-public class TestCase2 {
+public class TestCase1 {
 
     WebDriver driver;
 
@@ -10,92 +9,110 @@ public class TestCase2 {
 
         driver.get("https://www.cars.com/");
     }
-
     @AfterClass
-    public void tearDown() throws InterruptedException {
-        Thread.sleep(3000);
+    public void tearDown(){
         driver.quit();
     }
 
 
-
     @Test
-    public void testCase2Part1() throws InterruptedException {
+    public void testCase1() throws InterruptedException {
 
 
-        WebElement certifiedCars=driver.findElement(By.xpath("//option[contains(text(),'Certified Cars')]"));
+        Actions act = new Actions(driver);
+
+        WebElement dropDown = driver.findElement(By.xpath("//select[@name='stockType']"));
+        act.click(dropDown)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .click().perform();
+
+        WebElement chooseToyota = driver.findElement(By.xpath("//select[@name='makeId']"));
+
+        act.click(chooseToyota)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .sendKeys(Keys.ARROW_DOWN)
+                .click().perform();
+
+        Select chooseCorolla = new Select(driver.findElement(By.xpath("//select[@name='modelId']")));
         Thread.sleep(2000);
-        certifiedCars.click();
+        chooseCorolla.selectByVisibleText("Corolla");
 
+        Select price = new Select(driver.findElement(By.xpath("//select[@name='priceMax']")));
+        Thread.sleep(2000);
+        price.selectByIndex(8);
 
-        WebElement chooseLexus=driver.findElement(By.xpath("//select[@name='makeId']"));
-        Select selectLexus=new Select(chooseLexus);
-        selectLexus.selectByValue("20070");
-        Thread.sleep(1000);
+        Select miles = new Select(driver.findElement(By.xpath("//select[@name='radius']")));
+        Thread.sleep(2000);
+        miles.selectByValue("40");
 
-        WebElement model_ES360 = driver.findElement(By.xpath("//select[@name='modelId']"));
-        Select modelsSelect=new Select(model_ES360);
-        modelsSelect.selectByValue("21027");
-        Thread.sleep(1000);
-
-        WebElement price_50k=driver.findElement(By.xpath("//select[@name='priceMax']"));
-        Select priceSelect = new Select(price_50k);
-        priceSelect.selectByValue("50000");
-        Thread.sleep(1000);
-
-        WebElement miles_50 = driver.findElement(By.xpath("//select[@name='radius']"));
-        Select milesSelect=new Select(miles_50);
-        milesSelect.selectByValue("50");
-        Thread.sleep(1000);
-
-        WebElement ZIPCODE =driver.findElement(By.xpath("//input[@placeholder='ZIP']"));
-
+        WebElement ZIPCODE = driver.findElement(By.xpath("//input[@placeholder='ZIP']"));
         ZIPCODE.clear();
-        Thread.sleep(1000);
-        ZIPCODE.sendKeys("60016");
-
+        ZIPCODE.sendKeys("60018");
 
         WebElement searchButton = driver.findElement(By.xpath("//input[@class='NZE2g']"));
         searchButton.click();
+
+        WebElement saleValidation = driver.findElement(By.xpath("//h1[@class='srp-header']"));
+
+        String actualText = saleValidation.getText();
+        String expectedText = "Certified Used Toyota Corolla for Sale";
+
         Thread.sleep(2000);
+        System.out.println(actualText);
+        System.out.println(actualText.equals(expectedText));
 
-        List<WebElement> listOfCars = driver.findElements(By.xpath("//h2[@class='listing-row__title']"));
+        Assert.assertTrue(expectedText.contains(actualText));
 
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        System.out.println(listOfCars.size());
-
-        if(listOfCars.size() <= 20){
-            System.out.println("Not more than 20 cars in this page");
-        }else{
-            System.out.println("More than 20 cars in this page");
-        }
 
     }
 
 
     @Test
-    public void testCase2Part2(){
+    public void testP2() {
 
-        List<WebElement> listOfCars = driver.findElements(By.xpath("//h2[@class='listing-row__title']"));
+        WebElement validateMiles = driver.findElement(By.xpath("//option[contains(text(),'40 miles')]"));
+        Assert.assertTrue(validateMiles.isSelected());
 
-        for(WebElement allCarsNames : listOfCars) {
-            System.out.println(allCarsNames.getText());
-        }
-
-        for(WebElement allCarsNames : listOfCars) {
-            allCarsNames.getText();
-
-            if(allCarsNames.getText().contains("Lexus ES 350")) {
-                Assert.assertTrue(true);
-            }else{
-                Assert.assertTrue(false);
-            }
+        WebElement certPreOwnedButton = driver.findElement(By.xpath("//label[contains(text(),'Certified Pre-Owned')]"));
+        Assert.assertTrue(certPreOwnedButton.getText().contains("Certified Pre-Owned"));
 
 
-        }
+        WebElement isToyotaSelected = driver.findElement(By.xpath("//label[contains(@class,'checkbox__label')][contains(text(),'Toyota')]"));
+        Assert.assertTrue(isToyotaSelected.isEnabled());
 
-
-
+        WebElement isCorolla = driver.findElement(By.xpath("//li[@class='checkbox shortlist']//label[contains(@class,'checkbox__label')][contains(text(),'Corolla')]"));
+        Assert.assertTrue(isCorolla.isEnabled());
+        System.out.println(isCorolla.isEnabled());
 
     }
 }
